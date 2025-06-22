@@ -1,14 +1,15 @@
 version: '3.8'
 services:
   vllm_0:
-    image: vllm/vllm-openai:v0.6.2
+    image: vllm/vllm-openai:cuda12.1
     command: "--model ${MODEL} --gpu-memory-utilization 0.6 --port 8000"
     ports:
       - "8000:8000"
     environment:
       HF_TOKEN: ${HF_TOKEN}
     volumes:
-      - ${LOCAL_HF_HOME}:/root/.cache/huggingface
+      # - ${LOCAL_HF_HOME}:/root/.cache/huggingface
+      - ${LOCAL_Model_HOME}:/root/model
     runtime: nvidia
     deploy:
       resources:
@@ -20,14 +21,15 @@ services:
     ipc: host
 
   vllm_1:
-    image: vllm/vllm-openai:v0.6.2
+    image: vllm/vllm-openai:cuda12.1
     command: "--model ${MODEL} --gpu-memory-utilization 0.6 --port 8001"
     ports:
       - "8001:8001"
     environment:
       HF_TOKEN: ${HF_TOKEN}
     volumes:
-      - ${LOCAL_HF_HOME}:/root/.cache/huggingface
+      # - ${LOCAL_HF_HOME}:/root/.cache/huggingface
+      - ${LOCAL_Model_HOME}:/root/model
     runtime: nvidia
     deploy:
       resources:
@@ -39,7 +41,7 @@ services:
     ipc: host
 
   lmcache_0:
-    image: lmcache/lmcache_vllm:lmcache-0.1.4
+    image: lmcache/lmcache_vllm:lmcache-cuda12.1
     command: "${MODEL} --gpu-memory-utilization 0.6 --port 8002"
     ports:
       - "8002:8002"
@@ -48,7 +50,7 @@ services:
       LMCACHE_CONFIG_FILE: /etc/lmcache-config.yaml
     volumes:
       - ${KV_STORE_DIR}:/mnt/data
-      - ${LOCAL_HF_HOME}:/root/.cache/huggingface
+      - ${LOCAL_Model_HOME}:/root/model
       - ./lmcache-config.yaml:/etc/lmcache-config.yaml
     runtime: nvidia
     deploy:
@@ -63,7 +65,7 @@ services:
 
 
   lmcache_1:
-    image: lmcache/lmcache_vllm:lmcache-0.1.4
+    image: lmcache/lmcache_vllm:lmcache-cuda12.1
     command: "${MODEL} --gpu-memory-utilization 0.6 --port 8003"
     ports:
       - "8003:8003"
@@ -72,7 +74,7 @@ services:
       LMCACHE_CONFIG_FILE: /etc/lmcache-config.yaml
     volumes:
       - ${KV_STORE_DIR}:/mnt/data
-      - ${LOCAL_HF_HOME}:/root/.cache/huggingface
+      - ${LOCAL_Model_HOME}:/root/model
       - ./lmcache-config.yaml:/etc/lmcache-config.yaml
     runtime: nvidia
     deploy:

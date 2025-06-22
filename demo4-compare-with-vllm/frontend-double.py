@@ -79,13 +79,13 @@ with col1:
 
     session = chat_session.ChatSession(ip, port)
 
-    system_prompt = "You are a helpful assistant. I will now give you a document and please answer my question afterwards based on the content in document"
+    system_prompt = "你是一个有帮助的助手。我将给你一个文档，请根据文档内容回答我的问题。"
 
     session.set_context([system_prompt] + [context])
     num_tokens = tokenizer.encode(session.get_context())
 
     messages = st.container(height=300)
-    if prompt := st.chat_input("Type your question about this document", key = "vllm"):
+    if prompt := st.chat_input("请输入您关于这个文档的问题", key = "vllm"):
         messages.chat_message("user").write(prompt)
         messages.chat_message("assistant").write_stream(session.chat(prompt))
 
@@ -97,13 +97,13 @@ with col2:
 
     session = chat_session.ChatSession(ip, port)
 
-    system_prompt = "You are a helpful assistant. I will now give you a document and please answer my question afterwards based on the content in document"
+    system_prompt = "你是一个有帮助的助手。我将给你一个文档，请根据文档内容回答我的问题。"
 
     session.set_context([system_prompt] + [context])
     num_tokens = tokenizer.encode(session.get_context())
 
     messages = st.container(height=300)
-    if prompt := st.chat_input("Type your question about this document", key = "lmcache"):
+    if prompt := st.chat_input("请输入您关于这个文档的问题", key = "lmcache"):
         messages.chat_message("user").write(prompt)
         messages.chat_message("assistant").write_stream(session.chat(prompt))
 
